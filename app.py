@@ -5,9 +5,9 @@ import librosa
 import tensorflow as tf
 import streamlit as st
 
-# Define your GunshotDetector class
+# Define your GunshotDetector class using a relative path for the model.
 class GunshotDetector:
-    def __init__(self, model_path="E:\\gunshot\\gunshot_detection_model.h5", n_mfcc=13, max_pad_length=40):
+    def __init__(self, model_path="gunshot_detection_model.h5", n_mfcc=13, max_pad_length=40):
         """
         Initializes the gunshot detector with the given model and MFCC parameters.
         Args:
@@ -82,10 +82,13 @@ Upload an audio file (WAV, MP3, OGG, FLAC) and the system will analyze it to det
 # Sidebar with additional information
 st.sidebar.title("About")
 st.sidebar.info("""
-This app uses a deep learning model to detect gunshots in audio. 
+This app uses a deep learning model to detect gunshots in audio.
 The model was trained on the UrbanSound8K dataset using MFCC features and a feedforward neural network.
-When a gunshot is detected, an alert is sent to +919356684307.
+When a gunshot is detected, an alert is sent to the specified phone number.
 """)
+
+# Ask the user to provide a phone number for alerting.
+phone_number = st.text_input("Enter the phone number to send an alert to", value="+919356684307")
 
 # File uploader widget; adjust accepted file types as needed.
 uploaded_file = st.file_uploader("Choose an audio file", type=["wav", "mp3", "ogg", "flac"])
@@ -99,14 +102,14 @@ if uploaded_file is not None:
     st.write("### Processing the audio file...")
     
     try:
-        # Initialize the detector (update model_path if needed)
-        detector = GunshotDetector(model_path="E:\\gunshot\\gunshot_detection_model.h5")
+        # Initialize the detector (ensure gunshot_detection_model.h5 is in your repository)
+        detector = GunshotDetector(model_path="gunshot_detection_model.h5")
         # Run prediction on the temporary file
         result = detector.predict(temp_file_path)
         
-        # Display result with additional alert message if gunshot is detected
+        # Display result with customized alert message if gunshot is detected.
         if result == "Gunshot detected":
-            st.success("Gunshot detected! Sending alert to +919356684307")
+            st.success(f"Gunshot detected! Sending alert to {phone_number}")
         elif result == "No gunshot detected":
             st.info("No gunshot detected in the audio.")
         else:
