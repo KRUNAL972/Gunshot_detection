@@ -2,3 +2,4 @@ numpy>=1.18.0
 librosa>=0.8.0
 tensorflow>=2.18.0
 streamlit>=1.0.0
+resampy>=0.2.2
